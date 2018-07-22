@@ -1,0 +1,46 @@
+version: '2.1'
+services:
+  mypostgres:
+    image: postgres
+    healthcheck:
+      test: "pg_isready -h localhost -d grant -p 5432 -U postgres"
+      interval: 3s
+      timeout: 5s
+      retries: 30
+    ports:
+     - "5432"
+    environment:
+     - POSTGRES_PASSWORD=postgres
+     - POSTGRES_USER=postgres
+     - POSTGRES_DB=grant
+  rabbit1:
+    build: rabbitmq/.
+    ports:
+     - "15672"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+  rabbit2:
+    build: grant-rabbitmq
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbit1:15672"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      rabbit1:
+        condition: service_healthy
+  notification:
+    build: grant-email-notification
+    depends_on:
+      rabbit2:
+        condition: service_healthy
+  app:
+    build: "grant-server"
+    ports:
+    - "8080"
+    depends_on:
+      mypostgres:
+        condition: service_healthy
