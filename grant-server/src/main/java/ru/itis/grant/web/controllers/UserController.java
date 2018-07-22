@@ -36,6 +36,13 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
+    @RequestMapping(value = "/activate", method = RequestMethod.POST)
+    public ResponseEntity<String> activation(
+            @RequestParam String key) {
+        String token = userService.activate(key);
+        return ResponseEntity.ok(token);
+    }
+
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ResponseEntity<ResponseUserDto> profile(
             @RequestHeader(value = "Auth-Token") String token) {

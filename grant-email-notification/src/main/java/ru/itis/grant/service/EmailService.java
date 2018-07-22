@@ -34,8 +34,7 @@ public class EmailService {
     }
 
     @RabbitListener(queues = "grant-email")
-    public void process(byte[] data) {
-        Message message = (Message) SerializationUtils.deserialize(data);
+    public void process(Message message) {
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

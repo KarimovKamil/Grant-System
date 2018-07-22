@@ -2,14 +2,12 @@ package ru.itis.grant.validation.verification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.itis.grant.dao.interfaces.ApplicationDao;
-import ru.itis.grant.dao.interfaces.EventDao;
-import ru.itis.grant.dao.interfaces.PatternDao;
-import ru.itis.grant.dao.interfaces.UserDao;
+import ru.itis.grant.dao.interfaces.*;
 import ru.itis.grant.dto.request.RequestApplicationDto;
 import ru.itis.grant.dto.request.RequestEventDto;
 import ru.itis.grant.dto.request.RequestPatternDto;
 import ru.itis.grant.dto.request.RequestUserDto;
+import ru.itis.grant.model.ActivationKey;
 import ru.itis.grant.model.Pattern;
 import ru.itis.grant.security.exception.IncorrectDataException;
 import ru.itis.grant.validation.dto.ApplicationDtoValidator;
@@ -30,6 +28,8 @@ public class Verification {
     EventDao eventDao;
     @Autowired
     PatternDao patternDao;
+    @Autowired
+    ActivationKeyDao activationKeyDao;
 
     public void verifyTokenExistence(String token) {
         if (!userDao.userExistenceByToken(token)) {
@@ -40,6 +40,12 @@ public class Verification {
     public void verifyEmailExistence(String email) {
         if (!userDao.userExistenceByEmail(email)) {
             throw new IncorrectDataException("email", "Неверный email");
+        }
+    }
+
+    public void verifyActivationKeyExistence(String key) {
+        if (!activationKeyDao.activationKeyExistence(key)) {
+            throw new IncorrectDataException("key", "Неверный ключ активации");
         }
     }
 

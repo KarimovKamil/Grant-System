@@ -17,6 +17,8 @@ public interface UserService {
 
     String register(RequestUserDto authDto);
 
+    String activate(String activationKey);
+
     ResponseUserDto userInfo(String token);
 
     ResponseUserDto updateUserInfo(String token, UserUpdateDto userUpdateDto);

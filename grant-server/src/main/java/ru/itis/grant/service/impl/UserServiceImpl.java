@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService {
     ApplicationDao applicationDao;
     @Autowired
     ElementValueDao elementValueDao;
+    @Autowired
+    ActivationKeyDao activationKeyDao;
 
     @Override
     public String login(AuthDto authDto) {
@@ -83,16 +85,21 @@ public class UserServiceImpl implements UserService {
                 userDto);
         user.setRole("USER");
         userDao.addUser(user);
-        //TODO: сохранять activationKey в бд
-        Message message = Message.builder()
-                .subject("Регистрация")
-                .text(messageGenerator.generateRegistrationMessage(UUID.randomUUID().toString()))
-                .email(user.getEmail())
-                .build();
-        byte[] data = SerializationUtils.serialize(message);
-        rabbitTemplate.convertAndSend("grant-exchange", "messages", data);
+        sendRegistrationEmail(user);
         //TODO: вместо токена отправлять сообщение
-        return user.getToken();
+        return "Подтвердите регистрацию";
+    }
+
+    @Override
+    public String activate(String activationKey) {
+        verification.verifyActivationKeyExistence(activationKey);
+        ActivationKey activationKeyFromDB = activationKeyDao.getActivationKey(activationKey);
+        String token = tokenGenerator.generateToken();
+        User user = activationKeyFromDB.getUser();
+        user.setToken(token);
+        userDao.updateUser(user);
+        activationKeyDao.deleteUserActivationKeys(user.getId());
+        return token;
     }
 
     @Override
@@ -254,5 +261,21 @@ public class UserServiceImpl implements UserService {
         verification.verifyUserApplicationExistenceById(token, applicationId);
         applicationDao.deleteApplication(applicationDao.getApplicationById(applicationId));
         return true;
+    }
+
+    private void sendRegistrationEmail(User user) {
+        String key = UUID.randomUUID().toString();
+        Message message = Message.builder()
+                .subject("Регистрация")
+                .text(messageGenerator.generateRegistrationMessage(key))
+                .email(user.getEmail())
+                .build();
+        ActivationKey activationKey = ActivationKey.builder()
+                .sendDate(new Date())
+                .key(key)
+                .user(user)
+                .build();
+        activationKeyDao.addActivationKey(activationKey);
+        rabbitTemplate.convertAndSend("grant-exchange", "messages", message);
     }
 }
