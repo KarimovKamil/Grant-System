@@ -62,9 +62,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String login(AuthDto authDto) {
-        //TODO: проверять подтвердил ли почту пользователь
         verification.verifyEmailExistence(authDto.getEmail());
         User userFromDB = userDao.getUserByEmail(authDto.getEmail());
+        if (userFromDB.getRole().intern() == "GUEST") {
+            throw new IncorrectDataException("email", "Вы не подтвердили почту");
+        }
         if (hashGenerator.match(authDto.getPassword(), userFromDB.getHashPassword())) {
             String token = tokenGenerator.generateToken();
             userFromDB.setToken(token);
@@ -80,18 +82,17 @@ public class UserServiceImpl implements UserService {
         verification.verifyEmailUnique(userDto.getEmail());
         verification.verifyUserDto(userDto);
         User user = conversionFactory.requestUserDtoToUser(
-                tokenGenerator.generateToken(),
                 hashGenerator.encode(userDto.getPassword()),
                 userDto);
-        user.setRole("USER");
+        user.setRole("GUEST");
         userDao.addUser(user);
         sendRegistrationEmail(user);
-        //TODO: вместо токена отправлять сообщение
         return "Подтвердите регистрацию";
     }
 
     @Override
     public String activate(String activationKey) {
+        //TODO: удалять других неактивных пользователей с такой же почтой
         verification.verifyActivationKeyExistence(activationKey);
         ActivationKey activationKeyFromDB = activationKeyDao.getActivationKey(activationKey);
         String token = tokenGenerator.generateToken();
