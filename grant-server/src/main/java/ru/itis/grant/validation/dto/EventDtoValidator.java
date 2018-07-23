@@ -23,10 +23,10 @@ public class EventDtoValidator {
     }
 
     public void verify(RequestEventDto eventDto) {
-        if (Objects.nonNull(eventDto.getName()) || Objects.nonNull(eventDto.getDescription())) {
+        if (Objects.isNull(eventDto.getName()) || Objects.isNull(eventDto.getDescription())) {
             throw new IncorrectDataException("values", "Неверно введены значения");
         }
-        if (Objects.nonNull(eventDto.getEndDate()) || Objects.nonNull(eventDto.getStartDate())
+        if (Objects.isNull(eventDto.getEndDate()) || Objects.isNull(eventDto.getStartDate())
                 || !eventDto.getEndDate().after(eventDto.getStartDate()) || !eventDto.getEndDate().after(new Date())) {
             throw new IncorrectDataException("dates", "Неверно введены даты начала и окончания подачи заявок");
         }

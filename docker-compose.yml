@@ -1,5 +1,40 @@
 version: '2.1'
 services:
+  rabbit1:
+    build: rabbitmq/.
+    ports:
+     - "15672:15672"
+     - "5672:5672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672/"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+  rabbit2:
+    build: grant-rabbitmq
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbit1:15672/"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      rabbit1:
+        condition: service_healthy
+  notification:
+    build: grant-email-notification
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbit1:15672/"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      rabbit2:
+        condition: service_healthy
   mypostgres:
     image: postgres
     healthcheck:
@@ -13,34 +48,16 @@ services:
      - POSTGRES_PASSWORD=postgres
      - POSTGRES_USER=postgres
      - POSTGRES_DB=grant
-  rabbit1:
-    build: rabbitmq/.
-    ports:
-     - "15672"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:15672"]
-      interval: 2s
-      timeout: 5s
-      retries: 30
-  rabbit2:
-    build: grant-rabbitmq
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://rabbit1:15672"]
-      interval: 2s
-      timeout: 5s
-      retries: 30
-    depends_on:
-      rabbit1:
-        condition: service_healthy
-  notification:
-    build: grant-email-notification
-    depends_on:
-      rabbit2:
-        condition: service_healthy
   app:
     build: "grant-server"
     ports:
-    - "8080"
+    - "8888:8888"
     depends_on:
+      notification:
+        condition: service_healthy
       mypostgres:
         condition: service_healthy
+  front:
+    build: "front"
+    ports:
+    - "8080:8080"

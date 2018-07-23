@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/organizers")
+@CrossOrigin
 public class OrganizerController {
 
     @Autowired

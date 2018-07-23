@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/experts")
+@CrossOrigin
 public class ExpertController {
 
     @Autowired
