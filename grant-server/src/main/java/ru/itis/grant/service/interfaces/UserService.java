@@ -1,23 +1,20 @@
 package ru.itis.grant.service.interfaces;
 
+import ru.itis.grant.dto.response.*;
 import ru.itis.grant.dto.request.AuthDto;
 import ru.itis.grant.dto.request.RequestApplicationDto;
 import ru.itis.grant.dto.request.RequestUserDto;
 import ru.itis.grant.dto.request.UserUpdateDto;
-import ru.itis.grant.dto.response.ResponseApplicationDto;
-import ru.itis.grant.dto.response.ResponseEventDto;
-import ru.itis.grant.dto.response.ResponsePatternDto;
-import ru.itis.grant.dto.response.ResponseUserDto;
 
 import java.util.List;
 
 public interface UserService {
 
-    String login(AuthDto authDto);
+    TokenDto login(AuthDto authDto);
 
-    String register(RequestUserDto authDto);
+    RegistrationResponse register(RequestUserDto authDto);
 
-    String activate(String activationKey);
+    TokenDto activate(String activationKey);
 
     ResponseUserDto userInfo(String token);
 

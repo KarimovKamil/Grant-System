@@ -1,6 +1,6 @@
 package ru.itis.grant.service.interfaces;
 
-import ru.itis.grant.dto.ValidateDto;
+import ru.itis.grant.dto.request.ValidateDto;
 import ru.itis.grant.dto.response.ResponseBanDto;
 import ru.itis.grant.dto.response.ResponseApplicationDto;
 import ru.itis.grant.dto.response.ResponseEventDto;

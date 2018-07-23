@@ -3,14 +3,11 @@ package ru.itis.grant.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.grant.dto.response.*;
 import ru.itis.grant.dto.request.AuthDto;
 import ru.itis.grant.dto.request.RequestApplicationDto;
 import ru.itis.grant.dto.request.RequestUserDto;
 import ru.itis.grant.dto.request.UserUpdateDto;
-import ru.itis.grant.dto.response.ResponseApplicationDto;
-import ru.itis.grant.dto.response.ResponseEventDto;
-import ru.itis.grant.dto.response.ResponsePatternDto;
-import ru.itis.grant.dto.response.ResponseUserDto;
 import ru.itis.grant.service.interfaces.UserService;
 
 import java.util.List;
@@ -23,23 +20,23 @@ public class UserController {
     UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<String> login(
+    public ResponseEntity<TokenDto> login(
             @RequestBody AuthDto authDto) {
-        String token = userService.login(authDto);
+        TokenDto token = userService.login(authDto);
         return ResponseEntity.ok(token);
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity<String> registration(
+    public ResponseEntity<RegistrationResponse> registration(
             @RequestBody RequestUserDto requestUserDto) {
-        String token = userService.register(requestUserDto);
-        return ResponseEntity.ok(token);
+        RegistrationResponse response = userService.register(requestUserDto);
+        return ResponseEntity.ok(response);
     }
 
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
-    public ResponseEntity<String> activation(
+    public ResponseEntity<TokenDto> activation(
             @RequestParam String key) {
-        String token = userService.activate(key);
+        TokenDto token = userService.activate(key);
         return ResponseEntity.ok(token);
     }
 
@@ -73,14 +70,6 @@ public class UserController {
         List<ResponseEventDto> requestEventDto = userService.getActiveEvents(from, count);
         return ResponseEntity.ok(requestEventDto);
     }
-
-//    @RequestMapping(value = "/events/activeWithPattern", method = RequestMethod.GET)
-//    public ResponseEntity<List<ResponseEventDto>> activeEventsWithPattern(
-//            @RequestParam int from,
-//            @RequestParam int count) {
-//        List<ResponseEventDto> requestEventDto = userService.getActiveEventsWithPattern(from, count);
-//        return ResponseEntity.ok(requestEventDto);
-//    }
 
     @RequestMapping(value = "/events/{id}", method = RequestMethod.GET)
     public ResponseEntity<ResponseEventDto> eventById(@PathVariable(value = "id") long id) {
