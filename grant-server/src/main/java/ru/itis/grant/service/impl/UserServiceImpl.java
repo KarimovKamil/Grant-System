@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
         user.setRole("GUEST");
         userDao.addUser(user);
         String key = sendRegistrationEmail(user);
+        activate(key);
         return RegistrationResponse.builder()
                 .message("Подтвердите регистрацию " + key)
                 .build();
@@ -98,6 +99,7 @@ public class UserServiceImpl implements UserService {
         String token = tokenGenerator.generateToken();
         User user = activationKeyFromDB.getUser();
         user.setToken(token);
+        user.setRole("USER");
         userDao.updateUser(user);
         activationKeyDao.deleteUserActivationKeys(user.getId());
         return TokenDto.builder()
