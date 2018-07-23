@@ -31,4 +31,6 @@ public interface OrganizerService {
     void deleteExpertFromEvent(long expertId, long eventId, String token);
 
     List<ResponseUserDto> getUsers(int from, int count);
+
+    List<ResponseUserDto> getExpertsByEvent(String token, long eventId, int from, int count);
 }

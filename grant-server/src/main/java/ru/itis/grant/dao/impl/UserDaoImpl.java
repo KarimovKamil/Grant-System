@@ -146,4 +146,15 @@ public class UserDaoImpl implements UserDao {
                 .getResultList()
                 .isEmpty();
     }
+
+    @Override
+    public List<User> getExpertsByEvent(long eventId, int from, int count) {
+        List<User> users = em.createNativeQuery("SELECT u.* FROM g_user u INNER JOIN g_user_ex_events ue " +
+                "ON u.id = ue.experts_id WHERE ue.ex_events_id = :eventId LIMIT :count OFFSET :from", User.class)
+                .setParameter("eventId", eventId)
+                .setParameter("from", from)
+                .setParameter("count", count)
+                .getResultList();
+        return users;
+    }
 }
