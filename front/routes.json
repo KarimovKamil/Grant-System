@@ -1,0 +1,11 @@
+[
+  "/events",
+  "/events/:id",
+  "/events/:id/pattern",
+  "/events/new",
+  "/events/:id/pattern/new",
+  "/signup/finish",
+  "/signup",
+  "/login",
+  "/"
+]
