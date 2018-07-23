@@ -3,7 +3,7 @@ package ru.itis.grant.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.grant.dto.ValidateDto;
+import ru.itis.grant.dto.request.ValidateDto;
 import ru.itis.grant.dto.response.ResponseApplicationDto;
 import ru.itis.grant.dto.response.ResponseEventDto;
 import ru.itis.grant.service.interfaces.ExpertService;

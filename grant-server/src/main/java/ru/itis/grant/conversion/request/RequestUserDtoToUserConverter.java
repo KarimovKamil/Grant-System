@@ -19,9 +19,8 @@ public class RequestUserDtoToUserConverter {
         return localInstance;
     }
 
-    public User convert(String token, String hashPassword, RequestUserDto requestUserDto) {
+    public User convert(String hashPassword, RequestUserDto requestUserDto) {
         return User.builder()
-                .token(token)
                 .hashPassword(hashPassword)
                 .email(requestUserDto.getEmail())
                 .birthDate(requestUserDto.getBirthDate())

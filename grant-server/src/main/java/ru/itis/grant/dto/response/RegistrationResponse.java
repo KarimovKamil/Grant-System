@@ -1,4 +1,4 @@
-package ru.itis.grant.dto;
+package ru.itis.grant.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ValidateDto {
-    private String status;
-    private String comment;
+public class RegistrationResponse {
+    private String message;
 }

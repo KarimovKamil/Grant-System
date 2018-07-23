@@ -42,4 +42,6 @@ public interface UserDao {
     List<Ban> getBans(String token, long from, long count);
 
     boolean expertBanExistence(String token, long banId);
+
+    List<User> getExpertsByEvent(long eventId, int from, int count);
 }

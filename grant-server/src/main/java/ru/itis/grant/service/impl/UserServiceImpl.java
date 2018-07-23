@@ -1,22 +1,18 @@
 package ru.itis.grant.service.impl;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.grant.conversion.ConversionListResultFactory;
 import ru.itis.grant.conversion.ConversionResultFactory;
 import ru.itis.grant.dao.interfaces.*;
+import ru.itis.grant.dto.response.*;
 import ru.itis.grant.model.Message;
 import ru.itis.grant.dto.request.AuthDto;
 import ru.itis.grant.dto.request.RequestApplicationDto;
 import ru.itis.grant.dto.request.RequestUserDto;
 import ru.itis.grant.dto.request.UserUpdateDto;
-import ru.itis.grant.dto.response.ResponseApplicationDto;
-import ru.itis.grant.dto.response.ResponseEventDto;
-import ru.itis.grant.dto.response.ResponsePatternDto;
-import ru.itis.grant.dto.response.ResponseUserDto;
 import ru.itis.grant.model.*;
 import ru.itis.grant.security.exception.IncorrectDataException;
 import ru.itis.grant.service.interfaces.UserService;
@@ -61,37 +57,42 @@ public class UserServiceImpl implements UserService {
     ActivationKeyDao activationKeyDao;
 
     @Override
-    public String login(AuthDto authDto) {
-        //TODO: проверять подтвердил ли почту пользователь
+    public TokenDto login(AuthDto authDto) {
         verification.verifyEmailExistence(authDto.getEmail());
         User userFromDB = userDao.getUserByEmail(authDto.getEmail());
+        if (userFromDB.getRole().intern() == "GUEST") {
+            throw new IncorrectDataException("email", "Вы не подтвердили почту");
+        }
         if (hashGenerator.match(authDto.getPassword(), userFromDB.getHashPassword())) {
             String token = tokenGenerator.generateToken();
             userFromDB.setToken(token);
             userDao.updateUser(userFromDB);
-            return token;
+            return TokenDto.builder()
+                    .token(token)
+                    .build();
         } else {
             throw new IncorrectDataException("email and password", "Неверный email или пароль");
         }
     }
 
     @Override
-    public String register(RequestUserDto userDto) {
+    public RegistrationResponse register(RequestUserDto userDto) {
         verification.verifyEmailUnique(userDto.getEmail());
         verification.verifyUserDto(userDto);
         User user = conversionFactory.requestUserDtoToUser(
-                tokenGenerator.generateToken(),
                 hashGenerator.encode(userDto.getPassword()),
                 userDto);
-        user.setRole("USER");
+        user.setRole("GUEST");
         userDao.addUser(user);
-        sendRegistrationEmail(user);
-        //TODO: вместо токена отправлять сообщение
-        return "Подтвердите регистрацию";
+        String key = sendRegistrationEmail(user);
+        return RegistrationResponse.builder()
+                .message("Подтвердите регистрацию " + key)
+                .build();
     }
 
     @Override
-    public String activate(String activationKey) {
+    public TokenDto activate(String activationKey) {
+        //TODO: удалять других неактивных пользователей с такой же почтой
         verification.verifyActivationKeyExistence(activationKey);
         ActivationKey activationKeyFromDB = activationKeyDao.getActivationKey(activationKey);
         String token = tokenGenerator.generateToken();
@@ -99,7 +100,9 @@ public class UserServiceImpl implements UserService {
         user.setToken(token);
         userDao.updateUser(user);
         activationKeyDao.deleteUserActivationKeys(user.getId());
-        return token;
+        return TokenDto.builder()
+                .token(token)
+                .build();
     }
 
     @Override
@@ -263,7 +266,7 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    private void sendRegistrationEmail(User user) {
+    private String sendRegistrationEmail(User user) {
         String key = UUID.randomUUID().toString();
         Message message = Message.builder()
                 .subject("Регистрация")
@@ -277,5 +280,6 @@ public class UserServiceImpl implements UserService {
                 .build();
         activationKeyDao.addActivationKey(activationKey);
         rabbitTemplate.convertAndSend("grant-exchange", "messages", message);
+        return key;
     }
 }

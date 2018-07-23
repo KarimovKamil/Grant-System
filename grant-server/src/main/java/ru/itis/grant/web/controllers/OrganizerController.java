@@ -122,4 +122,14 @@ public class OrganizerController {
         String applicationString = applicationService.getApplicationInString(id);
         return ResponseEntity.ok(applicationString);
     }
+
+    @RequestMapping(value = "/events/{eventId}/experts", method = RequestMethod.GET)
+    public ResponseEntity<List<ResponseUserDto>> getExpertsByEvent(
+            @RequestHeader(value = "Auth-Token") String token,
+            @PathVariable(value = "eventId") long eventId,
+            @RequestParam(value = "from") int from,
+            @RequestParam(value = "count") int count) {
+        List<ResponseUserDto> users = organizerService.getExpertsByEvent(token, eventId, from, count);
+        return ResponseEntity.ok(users);
+    }
 }

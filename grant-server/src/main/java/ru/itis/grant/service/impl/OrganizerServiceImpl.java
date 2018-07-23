@@ -143,4 +143,11 @@ public class OrganizerServiceImpl implements OrganizerService {
     public List<ResponseUserDto> getUsers(int from, int count) {
         return conversionListFactory.usersToResponseUserDtos(userDao.getAllUsersFromCount(from, count));
     }
+
+    @Override
+    public List<ResponseUserDto> getExpertsByEvent(String token, long eventId, int from, int count) {
+        verification.verifyOrganizerEventExistence(eventId, token);
+        List<User> users = userDao.getExpertsByEvent(eventId, from, count);
+        return conversionListFactory.usersToResponseUserDtos(users);
+    }
 }

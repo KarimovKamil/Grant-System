@@ -5,6 +5,7 @@ import org.springframework.amqp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
 import ru.itis.grant.model.Message;
@@ -34,34 +35,19 @@ public class EmailService {
     }
 
     @RabbitListener(queues = "grant-email")
-    public void process(Message message) {
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.host", "smtp.yandex.ru");
-        props.put("mail.smtp.port", "465");
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
-
+    public void process(Message msg) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        
         try {
-
-            javax.mail.Message m = new MimeMessage(session);
-            m.setFrom(new InternetAddress(username));
-            m.setContent(message.getText(), "text/html");
-            m.setRecipients(javax.mail.Message.RecipientType.TO,
-                    InternetAddress.parse(message.getEmail()));
-            m.setSubject(message.getSubject());
-            m.setText(message.getText());
-
-            Transport.send(m);
+            message.setContent(msg.getText(), "text/html");
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+            messageHelper.setTo(msg.getEmail());
+            messageHelper.setSubject(msg.getSubject());
+            messageHelper.setText(msg.getText(), true);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
+
+        javaMailSender.send(message);
     }
 }

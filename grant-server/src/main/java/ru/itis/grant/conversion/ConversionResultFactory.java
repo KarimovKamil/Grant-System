@@ -9,8 +9,8 @@ import ru.itis.grant.model.*;
 
 @Component
 public class ConversionResultFactory {
-    public User requestUserDtoToUser(String token, String hashPassword, RequestUserDto requestUserDto) {
-        User user = RequestUserDtoToUserConverter.getInstance().convert(token, hashPassword, requestUserDto);
+    public User requestUserDtoToUser(String hashPassword, RequestUserDto requestUserDto) {
+        User user = RequestUserDtoToUserConverter.getInstance().convert(hashPassword, requestUserDto);
         return user;
     }
 
