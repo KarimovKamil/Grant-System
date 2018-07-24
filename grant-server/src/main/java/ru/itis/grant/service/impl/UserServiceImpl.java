@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegistrationResponse register(RequestUserDto userDto) {
+        //TODO: проверять занят ли email активным пользователем
         verification.verifyEmailUnique(userDto.getEmail());
         verification.verifyUserDto(userDto);
         User user = conversionFactory.requestUserDtoToUser(

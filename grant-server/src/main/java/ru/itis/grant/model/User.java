@@ -21,7 +21,7 @@ public class User {
     @GenericGenerator(name = "us_id", strategy = "increment")
     @GeneratedValue(generator = "us_id")
     private long id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
     @Column(name = "first_name")
     private String firstName;
