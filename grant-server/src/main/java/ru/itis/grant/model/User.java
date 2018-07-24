@@ -45,10 +45,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "{" +
-                "Имя: '" + firstName + '\'' +
-                ", фамилия: '" + secondName + '\'' +
-                ", email: '" + email + '\'' +
-                '}';
+        return "" +
+                "Имя: " + firstName +
+                ", фамилия: " + secondName +
+                ", email: " + email;
     }
 }

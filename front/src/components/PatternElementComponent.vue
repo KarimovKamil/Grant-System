@@ -7,7 +7,7 @@
 
   <pattern-radiobutton-component v-else-if="patternElement.type === 'RADIOBUTTON'" v-bind:pattern-element="patternElement"/>
 
-  <pattern-multiselect-component v-else-if="patternElement.type === 'MULTISELECT'" v-bind:pattern-element="patternElement"/>
+  <!--<pattern-multiselect-component v-else-if="patternElement.type === 'MULTISELECT'" v-bind:pattern-element="patternElement"/>-->
 </template>
 
 <script>

@@ -7,6 +7,9 @@
         <p class="mb-0 font-italic">Автор: {{event.owner.firstName}} {{event.owner.secondName}}</p>
       </div>
     </div>
+    <div class="d-flex flex-row-reverse bg-dark p-3 rounded shadow">
+      <a :href="`/events/${event.id}/pattern`" class="btn btn-primary mr-2">Заполнить заявку</a>
+    </div>
   </main>
 </template>
 

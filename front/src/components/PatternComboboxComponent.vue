@@ -1,7 +1,7 @@
 <template>
   <div class="form-group m-2">
     <label class="mb-0">{{patternElement.name}}<span class="text-danger" v-if="patternElement.required">*</span></label>
-    <multiselect v-model="selected"
+    <multiselect v-model="patternElement.filledValue"
                  :options="patternElement.selectableValue"
                  :close-on-select="true"
                  placeholder="Выберите..."
@@ -26,7 +26,10 @@
       }
     },
     props: {
-      patternElement: {}
+      patternElement: {
+        type: Object,
+        required: true
+      }
     }
   }
 </script>

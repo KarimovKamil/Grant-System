@@ -28,9 +28,8 @@ public class ElementValue {
 
     @Override
     public String toString() {
-        return "{" +
-                element.toString() + ",\r\n" +
-                "Значение: '" + filledValue + '\'' +
-                '}';
+        return "Тип: " +
+                element.getType() + ", " +
+                "значение: " + filledValue;
     }
 }

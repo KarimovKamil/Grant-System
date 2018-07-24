@@ -50,9 +50,13 @@
             <button class="dropdown-item" @click="addComboBoxField">Добавить поле ComboBox</button>
             <button class="dropdown-item" @click="addCheckboxesField">Добавить поле Checkbox</button>
             <button class="dropdown-item" @click="addRadioButtonsField">Добавить поле RadioButtons</button>
-            <button class="dropdown-item" @click="addMultiSelectField">Добавить поле MultiSelect</button>
+            <!--<button class="dropdown-item" @click="addMultiSelectField">Добавить поле MultiSelect</button>-->
           </div>
         </div>
+      </div>
+
+      <div class="text-center p-2">
+        <a :href="`/events/${this.$route.params.id}`" class="btn btn-primary">Назад</a>
       </div>
 
     </div>
