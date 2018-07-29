@@ -15,6 +15,7 @@ import java.util.List;
 public class ResponseApplicationDto {
     private long id;
     private Date applicationDate;
+    private String applicationName;
     private String status;
     private List<ResponseElementValueDto> values;
     private String comment;

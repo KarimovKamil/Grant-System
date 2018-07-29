@@ -33,6 +33,7 @@ public class ApplicationToResponseApplicationDtoConverter {
         return ResponseApplicationDto.builder()
                 .id(application.getId())
                 .applicationDate(application.getApplicationDate())
+                .applicationName(application.getPattern().getApplicationName())
                 .status(application.getStatus())
                 .values(responseElementValueDtoList)
                 .comment(application.getComment())
