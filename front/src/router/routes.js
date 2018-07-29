@@ -1,3 +1,5 @@
+import ApplicationComponent from '../components/ApplicationComponent';
+import ApplicationsComponent from '../components/ApplicationsComponent';
 import CreatingEventComponent from '../components/CreatingEventComponent';
 import CreatePatternComponent from '../components/CreatePatternComponent';
 import EventComponent from '../components/EventComponent';
@@ -8,6 +10,8 @@ import SignUpComponent from '../components/SignUpComponent';
 import SignUpFinishComponent from '../components/SignUpFinishComponent';
 
 export default [
+  {path: '/applications/:id', component: ApplicationComponent},
+  {path: '/applications', component: ApplicationsComponent},
   {path: '/events/new', component: CreatingEventComponent},
   {path: '/events/:id/pattern/new', component: CreatePatternComponent},
   {path: '/events/:id/pattern', component: PatternComponent},

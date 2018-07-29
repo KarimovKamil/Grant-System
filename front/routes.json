@@ -1,4 +1,6 @@
 [
+  "/applications/:id",
+  "/applications",
   "/events",
   "/events/:id",
   "/events/:id/pattern",
