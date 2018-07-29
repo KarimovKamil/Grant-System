@@ -71,7 +71,7 @@
           .reduce((acc, element) => acc && application.values.find(value => value.elementId === element.id).filledValue !== undefined, true);
         if (required) {
           axios.post(
-            `${this.$store.state.globalUrl}/users/application`,
+            `${this.$store.state.globalUrl}/users/applications`,
             application,
             {headers: {"Auth-Token": this.$cookies.get("authToken")}}
           ).then(response => window.location = '/events');
