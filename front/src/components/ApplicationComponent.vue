@@ -5,6 +5,7 @@
     </div>
 
     <div class="bg-white p-4 rounded shadow mb-3">
+      <h5>Название: {{application.applicationName}}</h5>
       <p>Статус: {{application.status}}</p>
       <p v-for="value in application.values">
         {{value.element.name}}: {{value.filledValue}}
