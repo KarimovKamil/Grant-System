@@ -21,11 +21,20 @@
         selected: []
       }
     },
+    beforeMount() {
+      this.patternElement.filledValue = "";
+    },
     methods: {
       changed(event) {
+        let filledValue = this.patternElement.filledValue !== "" ? this.patternElement.filledValue.split(", ") : [];
         if (event.target.checked) {
-          this.patternElement.filledValue = event.target.value;
+          filledValue.push(event.target.value);
+        } else {
+          let index = filledValue.findIndex(value => event.target.value === value);
+          filledValue.splice(index, 1);
+          console.log(filledValue);
         }
+        this.patternElement.filledValue = filledValue.join(", ");
       }
     }
   }
