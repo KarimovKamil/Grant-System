@@ -5,6 +5,8 @@
         <h3 class="mb-0">Создание события</h3>
       </div>
 
+      <div class="alert alert-danger mt-3 pt-2" v-if="errorMessage !== null">{{errorMessage}}</div>
+
       <div class="p-2">
         <div class="form-group">
           <label for="newEventName">Название</label>
@@ -45,7 +47,8 @@
 
       <div class="text-center">
         <button class="btn btn-primary"
-                @click="createEvent">Создать событие</button>
+                @click="createEvent">Создать событие
+        </button>
       </div>
     </div>
   </main>
@@ -74,6 +77,17 @@
           this.newEvent,
           {headers: {"Auth-Token": this.$cookies.get("authToken")}})
           .then(response => window.location = `/events/${response.data.id}`);
+      }
+    },
+    computed: {
+      errorMessage() {
+        if (!(new Date(this.newEvent.startDate) < new Date(this.newEvent.endDate))) {
+          return "Неверно введены даты начала и оканчания подачи заявок. Дата начала должна быть раньше, чем дата окончания."
+        } else if (!(new Date() < new Date(this.newEvent.endDate))) {
+          return `Неверно введены даты начала и окончания подачи заявок. Дата окончания должна быть позднее ${new Date().toLocaleString()}`;
+        } else {
+          return null;
+        }
       }
     }
   }
