@@ -60,8 +60,8 @@ public class ElementValueDtoValidator {
                 if (s.intern() == value.intern()) {
                     continue next;
                 }
-                return false;
             }
+            return false;
         }
         return true;
     }
