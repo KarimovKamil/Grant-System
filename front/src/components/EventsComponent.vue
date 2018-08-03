@@ -43,12 +43,12 @@
     methods: {
       allChosen() {
         this.isAll = true;
-        axios.get(`${this.$store.state.globalUrl}/users/events?from=1&count=50`)
+        axios.get('/api/users/events?from=1&count=50')
           .then(response => this.events = response.data);
       },
       activeChosen() {
         this.isAll = false;
-        axios.get(`${this.$store.state.globalUrl}/users/events/active?from=1&count=50`)
+        axios.get('/api/users/events/active?from=1&count=50')
           .then(response => this.events = response.data);
       }
     }

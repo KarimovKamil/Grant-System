@@ -47,7 +47,7 @@
       }
     },
     beforeMount() {
-      axios.get(`${this.$store.state.globalUrl}/users/events/${this.$route.params.id}/pattern`)
+      axios.get(`/api/users/events/${this.$route.params.id}/pattern`)
         .then(response => {
           if (response.status === 200) {
             this.pattern = response.data;
@@ -71,10 +71,10 @@
           .reduce((acc, element) => acc && application.values.find(value => value.elementId === element.id).filledValue !== undefined, true);
         if (required) {
           axios.post(
-            `${this.$store.state.globalUrl}/users/applications`,
+            `/api/users/applications`,
             application,
             {headers: {"Auth-Token": this.$cookies.get("authToken")}}
-          ).then(response => window.location = '/events');
+          ).then(response => this.$router.push('/events'));
         }
       }
     }

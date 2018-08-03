@@ -65,11 +65,11 @@
     },
     methods: {
       logIn() {
-        axios.post(`${this.$store.state.globalUrl}/users/login`, this.user)
+        axios.post('/api/users/login', this.user)
           .then(response => {
             if (response.status === 200) {
               this.$cookies.set("authToken", response.data.token);
-              window.location = "/events"
+              this.$router.push("/events");
             } else {
               this.error = response.data;
             }
@@ -77,11 +77,11 @@
       }
     },
     watch: {
-      "user.email"(newEmail, oldEmail) {
+      "user.email"(newEmail) {
         const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
         this.validations.emailValid = newEmail.search(regex) !== -1;
       },
-      "user.password"(newPassword, oldPassword) {
+      "user.password"(newPassword) {
         this.validations.passwordValid = newPassword.length >= 6 && newPassword.length <= 40;
       },
     }

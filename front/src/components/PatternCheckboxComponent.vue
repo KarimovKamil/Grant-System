@@ -32,7 +32,6 @@
         } else {
           let index = filledValue.findIndex(value => event.target.value === value);
           filledValue.splice(index, 1);
-          console.log(filledValue);
         }
         this.patternElement.filledValue = filledValue.join(", ");
       }

@@ -10,7 +10,7 @@
   export default {
     name: "SignUpFinishComponent",
     beforeMount() {
-      if (this.$store.state.responseAfterRegistration === "") window.location = "/";
+      if (this.$store.state.responseAfterRegistration === "") this.$router.push("/")
     }
   }
 </script>

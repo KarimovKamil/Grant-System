@@ -73,10 +73,10 @@
     methods: {
       createEvent() {
         axios.post(
-          `${this.$store.state.globalUrl}/organizers/events`,
+          '/api/organizers/events',
           this.newEvent,
           {headers: {"Auth-Token": this.$cookies.get("authToken")}})
-          .then(response => window.location = `/events/${response.data.id}`);
+          .then(response => this.$router.push(`/events/${response.data.id}`));
       }
     },
     computed: {
