@@ -31,21 +31,21 @@
       }
     },
     beforeMount() {
-      axios.get(`${this.$store.state.globalUrl}/users/applications/${this.$route.params.id}`, {headers: {"Auth-Token": this.$cookies.get("authToken")}})
+      axios.get(`/api/users/applications/${this.$route.params.id}`, {headers: {"Auth-Token": this.$cookies.get("authToken")}})
         .then(response => {
           if (response.status === 200) {
             this.application = response.data;
           } else if (response.status === 400) {
-            window.location = "/applications"
+            this.$router.push("/applications");
           }
         })
     },
     methods: {
       deleteApplication() {
-        axios.delete(`${this.$store.state.globalUrl}/users/applications/${this.$route.params.id}`, {headers: {"Auth-Token": this.$cookies.get("authToken")}})
+        axios.delete(`/api/users/applications/${this.$route.params.id}`, {headers: {"Auth-Token": this.$cookies.get("authToken")}})
           .then(response => {
             if (response.status === 200) {
-              window.location = "/applications"
+              this.$router.push("/applications");
             }
           });
       }

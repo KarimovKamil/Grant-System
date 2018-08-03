@@ -1,13 +1,12 @@
-FROM node:8.10.0-alpine
-
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-COPY package.json /usr/src/app
+FROM node:8.11.3-alpine as build-stage
+WORKDIR /app
+COPY package.json .
 RUN yarn
-
-COPY . /usr/src/app
+COPY . .
 RUN yarn build
 
-EXPOSE 8080
-CMD node server.js  
+FROM nginx:1.14.0-alpine as production-stage
+COPY --from=build-stage /app/dist /usr/src/app/dist
+COPY --from=build-stage /app/client.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

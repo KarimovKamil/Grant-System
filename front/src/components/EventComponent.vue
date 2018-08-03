@@ -24,7 +24,7 @@
       }
     },
     beforeMount() {
-      axios.get(`${this.$store.state.globalUrl}/users/events/${this.$route.params.id}`)
+      axios.get(`/api/users/events/${this.$route.params.id}`)
         .then(response => this.event = response.data);
     }
   }

@@ -20,5 +20,5 @@ export default [
   {path: '/signup/finish', component: SignUpFinishComponent},
   {path: '/signup', component: SignUpComponent},
   {path: '/login', component: LogInComponent},
-  {path: '/', component: LogInComponent}
+  {path: '/', redirect: '/login'}
 ];

@@ -166,10 +166,12 @@
       registerUser() {
         this.user.birthDate = `${this.birthDate.year}-${this.birthDate.month}-${this.birthDate.day}`
         axios.post(
-          `${this.$store.state.globalUrl}/users/registration`,
+          `/api/users/registration`,
           this.user
-        ).then(response => this.$store.commit('changeResponse', response.data.message))
-          .then(response => window.location = "/signup/finish")
+        ).then(response => {
+          this.$store.commit('changeResponse', response.data.message);
+          this.$router.push('/signup/finish');
+        });
       },
       uploadDaysList() {
         this.date.daysInMonth = [];
@@ -189,21 +191,21 @@
       "birthDate.month"() {
         this.uploadDaysList();
       },
-      "birthDate.year"(newYear, oldYear) {
+      "birthDate.year"(newYear) {
         this.uploadDaysList();
         let currentYear = new Date().getFullYear();
         if (currentYear < newYear) {
           this.birthDate.year = currentYear;
         }
       },
-      "user.email"(newEmail, oldEmail) {
+      "user.email"(newEmail) {
         const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
         this.validations.emailValid = newEmail.search(regex) !== -1;
       },
-      "user.password"(newPassword, oldPassword) {
+      "user.password"(newPassword) {
         this.validations.passwordValid = newPassword.length >= 6 && newPassword.length <= 40;
       },
-      passwordConfirmation(newPassword, oldPassword) {
+      passwordConfirmation(newPassword) {
         this.validations.confirmationPasswordValid = newPassword === this.user.password
       },
     }

@@ -27,7 +27,7 @@
       }
     },
     beforeMount() {
-      axios.get(`${this.$store.state.globalUrl}/users/applications?from=0&count=50`, {headers: {"Auth-Token": this.$cookies.get("authToken")}})
+      axios.get(`/api/users/applications?from=0&count=50`, {headers: {"Auth-Token": this.$cookies.get("authToken")}})
         .then(response => {
           if (response.status === 200) {
             this.applications = response.data;
